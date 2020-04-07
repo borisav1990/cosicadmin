@@ -10,6 +10,7 @@
 	</parent>
 	<groupId>registry</groupId>
 	<artifactId>AutoStatus</artifactId>
+	
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>AutoStatus</name>
@@ -92,14 +93,6 @@
            <artifactId>itextpdf</artifactId>
           <version>5.5.9</version>
        </dependency>
-		
-		
-		
-		
-		
-		
-		
-		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -112,14 +105,31 @@
 			</exclusions>
 		</dependency>
 	</dependencies>
+	 <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals><goal>copy-dependencies</goal></goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
-	<build>
+	<!--  <build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				
 			</plugin>
 		</plugins>
-	</build>
+	</build> -->
 
 </project>
