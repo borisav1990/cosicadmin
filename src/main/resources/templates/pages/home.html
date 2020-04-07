@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html
+      xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+ <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon.png">
+    <title>Ćosić podovi | Administrator </title>
+    <link href="../assets/extra-libs/c3/c3.min.css" rel="stylesheet">
+    <link href="../assets/libs/chartist/dist/chartist.min.css" rel="stylesheet">
+    <link href="../assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link href="../dist/css/style.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="tablica.css">
+</head>
+<body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+        <div th:replace="pages/partials/_header"></div>
+           <div th:replace="pages/partials/_sidebar"></div>
+               <div class="page-wrapper">
+                  <div class="container-fluid">
+                    
+                    <!-- **************************INFORMATION FROM RESPONSE************************************* -->
+                    
+                    <div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show" role="alert" th:if="${error}">
+                       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                       <span aria-hidden="true">×</span></button><strong th:text="${error}"></strong>
+                   </div>
+                   
+                    <!-- ******************************TABLE FROM ALL VEHICLE****************************** -->
+                   <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-4">
+                                    <h4 class="card-title">Lista svih vozila</h4>
+                                    <div class="ml-auto">
+                                        <div class="dropdown sub-dropdown">
+                                            <button class="btn btn-link text-muted dropdown-toggle" type="button"
+                                                id="dd1" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                                <i data-feather="more-vertical"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd1">
+                                                <a class="dropdown-item" href="#">Dodaj novo vozilo</a>
+                                                <a class="dropdown-item" href="#">Dodaj servis</a>
+                                                <a class="dropdown-item" href="#">Dodaj registraciju</a>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table no-wrap v-middle mb-0">
+                                        <thead>
+                                            <tr class="border-0">
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Automobil:</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted px-2">Vlasnik:</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Registarske tablice:</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Registrovan do:</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Dana do isteka reg:</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Akcija</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody >
+                                            <tr th:each="vehicle: ${listOfVehicle}" >
+                                                <td class="px-2 py-4">
+                                                    <div class="d-flex no-block align-items-center">
+                                                        <div class="mr-3">
+                                                              <img th:if="${vehicle.brand == 'Volkswagen'}"  th:src="@{../assets/images/auto_brands/211.jpg}"  alt="user" class="rounded-circle" width="45"height="45" />
+                                                              <img th:if="${vehicle.brand == 'Audi'}"  th:src="@{../assets/images/auto_brands/38.jpg}"  alt="user" class="rounded-circle" width="45"height="45" />
+                                                              <img th:if="${vehicle.brand == 'Fiat'}"  th:src="@{../assets/images/auto_brands/109.jpg}"  alt="user" class="rounded-circle" width="45"height="45" />
+                                                              <img th:if="${vehicle.brand == 'Renault'}"  th:src="@{../assets/images/auto_brands/192.jpg}"  alt="user" class="rounded-circle" width="45"height="45" />
+                                                              <img th:if="${vehicle.brand == 'Peugeot'}"  th:src="@{../assets/images/auto_brands/185.jpg}"  alt="user" class="rounded-circle" width="45"height="45" />
+                                                              <img th:if="${vehicle.brand == 'Citroen'}"  th:src="@{../assets/images/auto_brands/97.jpg}"  alt="user" class="rounded-circle" width="45"height="45" />
+                                                             
+                                                              
+                                                         </div>
+                                                        <div class="">
+                                                            <h5 class="text-dark mb-0 font-16 font-weight-medium" th:text=${vehicle.brand}> </h5>
+                                                            <span class="text-muted font-14" th:text=${vehicle.model} ></span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="border-top-0 text-muted px-2 py-4 font-14" th:text=${vehicle.owner.ownerName}></td>
+                                                
+                                                <td class="border-top-0 text-center px-2 py-4">
+                                                 <div class="card" style= "width:198px; height:40px;">
+                                                       <div class="card-body" style= "background-image: url('../assets/images/reg-tablice.jpg');  background-size: 200px 50px; background-repeat: no-repeat;">
+                                                       <!-- <input type="text" class="form-control text-uppercase" placeholder="ŠA-123-AA" style=" width:169px; height:40px; position:absolute; left: 25,5px; top:6px;">  -->
+                                                       <h2 class="card-title" style=" width:169px; height:40px;  position:absolute; left: 25,5px; top:11px;" th:text=${vehicle.licensePlate}> </h2>
+                                                       </div>
+                                                    </div>
+                                                 </td>
+                                                 <td
+                                                    class="border-top-0 text-center font-weight-medium text-muted px-2 py-4" th:text=${vehicle.viewDate}>
+                                                 </td>
+                                               <td class="font-weight-medium text-dark border-top-0 px-2 py-4" >
+                                                 <button th:if="${vehicle.dayToReg > 30}"  class="btn waves-effect waves-light btn-info" th:title="${'Registracija važi još ' + vehicle.dayToReg + ' dana.'}" th:text=${vehicle.dayToReg}></button>
+                                                 <button th:if="${vehicle.dayToReg <= 30 AND vehicle.dayToReg > 10 }"  class="btn waves-effect waves-light btn-warning"  th:title="${'Registracija važi još ' + vehicle.dayToReg + ' dana.'}" th:text=${vehicle.dayToReg}></button>
+                                                 <button th:if="${vehicle.dayToReg <= 10 AND vehicle.dayToReg > 0}"  class="btn waves-effect waves-light btn-danger" th:title="${'Registracija važi još ' + vehicle.dayToReg + ' dana.'}" th:text=${vehicle.dayToReg}></button>
+                                                 <button th:if="${vehicle.dayToReg <= 0}"  class="btn waves-effect waves-light btn-light" th:title="${'Registracija istekla pre' + vehicle.dayToReg + ' dana.'}" th:text="ISTEKLA"></button>
+                                                </td>
+                                                 <td class="font-weight-medium text-dark border-top-0 px-2 py-4">
+                                                   <a type="button" class="btn waves-effect waves-light btn-rounded btn-outline-primary" title="Detalji o vozilu" th:href="@{'/admin/details/' + ${vehicle.id}}">Detalji</a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                </div>
+            </div>
+            <div th:replace="pages/partials/_footer"></div>
+
+    <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="../assets/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="../assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- apps -->
+    <!-- apps -->
+    <script src="../dist/js/app-style-switcher.js"></script>
+    <script src="../dist/js/feather.min.js"></script>
+    <script src="../assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="../dist/js/sidebarmenu.js"></script>
+    <!--Custom JavaScript -->
+    <script src="../dist/js/custom.min.js"></script>
+    <!--This page JavaScript -->
+    <script src="../assets/extra-libs/c3/d3.min.js"></script>
+    <script src="../assets/extra-libs/c3/c3.min.js"></script>
+    <script src="../assets/libs/chartist/dist/chartist.min.js"></script>
+    <script src="../assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
+    <script src="../assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js"></script>
+    <script src="../assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="../dist/js/pages/dashboards/dashboard1.min.js"></script>
+</body>
+</body>
+</html>

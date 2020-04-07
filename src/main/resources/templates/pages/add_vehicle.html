@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html
+      xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+ <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/images/favicon.png">
+    <title>Ćosić podovi | Administrator </title>
+    <script type="text/javascript" src="../../webjars/jquery/2.2.3/jquery.min.js"></script> 
+    <!-- Custom CSS -->
+    <link href="../../assets/extra-libs/c3/c3.min.css" rel="stylesheet">
+    <link href="../../assets/libs/chartist/dist/chartist.min.css" rel="stylesheet">
+    <link href="../../assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link href="../../dist/css/style.min.css" rel="stylesheet">
+</head>
+<body>
+  
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+  
+    <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+        <div th:replace="pages/partials/_header"></div>
+           <div th:replace="pages/partials/_sidebar"></div>
+               <div class="page-wrapper">
+                  <div class="container-fluid">
+                    
+                    <!-- **************************INFORMATION FROM RESPONSE************************************* -->
+                    <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${deleteSuccess}">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                      <strong th:text="${deleteSuccess}"></strong>
+                    </div>
+                    <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${saveSuccess}">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                      <strong th:text="${saveSuccess}"></strong>
+                    </div>
+                    <div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show" role="alert" th:if="${error}">
+                       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                       <span aria-hidden="true">×</span></button><strong th:text="${error}"></strong>
+                   </div>
+                    
+                     <!-- ******************************FORM FOR NEW VAHICLE****************************** -->
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Unos novog vozila</h4>
+                                <form action="#" th:action="@{'/admin/saveVehicle'}" th:object="${objOfVehicle}" method="post" enctype="multipart/form-data">
+                                    <div class="form-body">
+                                    
+                                      <input type="hidden" class="form-control"  th:field="*{id}">
+                                       
+                                       <div class="row">
+                                            <div class="col-md-4">
+                                             <label>Marka: </label>
+                                                <div class="form-group">
+                                                    <select class="form-control" id="exampleFormControlSelect1" th:field="*{brand}">
+                                                        <option th:selected th:value="default">Izaberi marku</option>
+                                                        <option th:value="Volkswagen">Volkswagen</option>
+                                                        <option th:value="Audi">Audi</option>
+                                                        <option th:value="Fiat">Fiat</option>
+                                                        <option th:value="Renault">Renault</option>
+                                                        <option th:value="Peugeot">Peugeot</option>
+                                                        <option th:value="Citroen">Citroen</option>
+                                                     </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                             <label>Model: </label>
+                                             <div class="form-group">
+                                                <input type="text" class="form-control" placeholder="Model" th:field="*{model}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                <label>Registarska oznaka: </label>
+                                                     <div class="col-sm-12 col-md-6 col-lg-3" >
+                                                    <div class="card" style= "width:198px; height:40px;">
+                                                       <div class="card-body" style= "background-image: url('../../../assets/images/reg-tablice.jpg');  background-size: 200px 50px; background-repeat: no-repeat;">
+                                                        <input type="text" class="form-control text-uppercase" placeholder="ŠA-123-AA" th:field="*{licensePlate}" style=" width:169px; height:40px; position:absolute; left: 25,5px; top:6px;">
+                                                       </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                            <label>Registrovan do: </label>
+                                                <div class="form-group">
+                                                  <input type="date" class="form-control"  value="2008-05-13T22:33:00" th:field="*{regValid}" >
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                          <div class="col-md-4">
+                                            <label>Vlasnik vozila:</label>
+                                                <div class="form-group">
+                                                    <select class="form-control" id="exampleFormControlSelect1" th:field="*{owner}">
+                                                        <option th:selected th:value="0">Izaberi vlasnika</option>
+                                                        <option th:each="i : ${listOfOwner}"  th:text="${i.ownerName+ ' - ' + i.name}" th:value="${i.id}"></option>
+                                                        
+                                                             
+                                                     </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                            <label>Godina proizvodnje:</label>
+                                                <div class="form-group">
+                                                    <select class="form-control" id="exampleFormControlSelect1" th:field="*{firstReg}">
+                                                        <option th:selected th:value="default">Izaberi godinu proizvodnje</option>
+                                                        <option th:value="1999">1999 god.</option>
+                                                        <option th:value="2000">2000 god.</option>
+                                                        <option th:value="2001">2001 god.</option>
+                                                        <option th:value="2002">2002 god.</option>
+                                                        <option th:value="2003">2003 god.</option>
+                                                        <option th:value="2004">2004 god.</option>
+                                                        <option th:value="2005">2005 god.</option>
+                                                        <option th:value="2006">2006 god.</option>
+                                                        <option th:value="2007">2007 god.</option>
+                                                        <option th:value="2008">2008 god.</option>
+                                                        <option th:value="2009">2009 god.</option>
+                                                             
+                                                     </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                            <label>Broj saobraćajne dozvole: </label>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="345456908" th:field="*{numberReg}">
+                                                </div>
+                                            </div>
+                                       </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                            <label>Pogonsko gorivo:</label>
+                                                <div class="form-group">
+                                                     <select class="form-control" id="exampleFormControlSelect1" th:field="*{fuelType}">
+                                                        <option th:selected th:value="default">Izaberi</option>
+                                                        <option th:value="Dizel">Dizel</option>
+                                                        <option th:value="Benzin">Benzin</option>
+                                                        <option th:value="TNG">TNG</option>
+                                                     </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                            <label>Mesta za sedenje: </label>
+                                                <div class="form-group">
+                                                     <select class="form-control" id="exampleFormControlSelect1" th:field="*{place}">
+                                                        <option th:selected th:value="default">Izaberi</option>
+                                                        <option th:value="1">1</option>
+                                                        <option th:value="2">2</option>
+                                                        <option th:value="3">3</option>
+                                                        <option th:value="4">4</option>
+                                                        <option th:value="5">5</option>
+                                                        <option th:value="6">6</option>
+                                                        <option th:value="7">7</option>
+                                                     </select>
+                                                </div>
+                                            </div>
+                                       </div>
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                            <label>Zapremina motora:</label>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="ccm" th:field="*{volume}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                            <label>Snaga motora: </label>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="kW" th:field="*{power}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                            <label>Masa vozila:</label>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="kg" th:field="*{mass}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                            <label>Nosivost vozila:</label>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="kg" th:field="*{payload}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                            <label>Kategorija vozila:</label>
+                                                <div class="form-group">
+                                                    <select class="form-control" id="exampleFormControlSelect1" th:field="*{category}">
+                                                        <option th:selected th:value="default">Izaberi</option>
+                                                        <option th:value="Putničko">Putničko vozilo</option>
+                                                        <option th:value="Teretno">Teretno vozilo</option>
+                                                        </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                          <div class="col-md-6">
+                                            <label>Broj motora:</label>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="028 103 450 A" th:field="*{motorNumber}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                            <label>Broj šasije: </label>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="YDCPC345456908" th:field="*{chassisNumber}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                       <div class="row">
+                                         <div class="col-md-6">
+                                           <label>Dodavanje fotografije:</label>
+                                                 <fieldset class="form-group">
+                                                   <input type="file" class="form-control-file" id="imageList"  th:field="*{imageList}" multiple="multiple">
+                                                 </fieldset>
+                                          </div>
+                                       </div>
+                                       <div class="row">
+                                          <div class="form-group" th:each = "file, itrStat : ${listOfImg}"   th:id="'imageindex'+${itrStat.index}" >
+                                               <span >
+                                       
+                                            <span    >
+                                                  <img class="rounded-circle" th:src="@{'/images/' + ${file.modifiedFileName}}" style="width:90px; height:90px; border-radius:50%; margin-left:30px;" />
+                                                <span class = "overlay">
+                                                  <a href="#" class="icon image-confirm-delete" title="Obrisati fotografiju" th:attr="data-id=${itrStat.index}, data-name=${file.modifiedFileName}">
+                                                     <i class="fa fa-trash" style="color:red;"></i>
+                                                 </a>
+                                               </span>
+                                              
+                                               
+                                               
+                                             </span>
+                                             
+                                       </span>
+                                            
+                                    </div>
+                                        <input type="hidden" class="form-control" th:field="*{removeImages}" th:id="removeImages" >
+                                       
+                                       </div>
+                               </div>
+                                    <div class="form-actions">
+                                        <div class="text-right">
+                                            <button type="submit" class="btn btn-info" th:text= "@{${isUpdated} ?'Ispravi':'Snimi'}"></button>
+                                            <a type="reset" class="btn btn-dark" href="/admin/addVehicle">Reset</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- ******************************TABLE FROM ALL VEHICLE****************************** -->
+                     <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-4">
+                                    <h4 class="card-title">Lista svih vozila</h4>
+                                    <div class="ml-auto">
+                                        <div class="dropdown sub-dropdown">
+                                            <button class="btn btn-link text-muted dropdown-toggle" type="button"
+                                                id="dd1" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                                <i data-feather="more-vertical"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd1">
+                                                <a class="dropdown-item" href="#">Dodaj novo vozilo</a>
+                                                <a class="dropdown-item" href="#">Dodaj servis</a>
+                                                <a class="dropdown-item" href="#">Dodaj registraciju</a>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table no-wrap v-middle mb-0">
+                                        <thead>
+                                            <tr class="border-0">
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Automobil:</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted px-2">Vlasnik:</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Registarske tablice:</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Registrovan do:</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Dana do isteka reg:</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Akcija</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody >
+                                            <tr th:each="vehicle: ${listOfVehicle}" >
+                                                <td class="px-2 py-4">
+                                                    <div class="d-flex no-block align-items-center">
+                                                        <div class="mr-3">
+                                                              <img th:if="${vehicle.brand == 'Volkswagen'}"  th:src="@{../../assets/images/auto_brands/211.jpg}"  alt="user" class="rounded-circle" width="45"height="45" />
+                                                              <img th:if="${vehicle.brand == 'Audi'}"  th:src="@{../../assets/images/auto_brands/38.jpg}"  alt="user" class="rounded-circle" width="45"height="45" />
+                                                              <img th:if="${vehicle.brand == 'Fiat'}"  th:src="@{../../assets/images/auto_brands/109.jpg}"  alt="user" class="rounded-circle" width="45"height="45" />
+                                                              <img th:if="${vehicle.brand == 'Renault'}"  th:src="@{../../assets/images/auto_brands/192.jpg}"  alt="user" class="rounded-circle" width="45"height="45" />
+                                                              <img th:if="${vehicle.brand == 'Peugeot'}"  th:src="@{../../assets/images/auto_brands/185.jpg}"  alt="user" class="rounded-circle" width="45"height="45" />
+                                                              <img th:if="${vehicle.brand == 'Citroen'}"  th:src="@{../../assets/images/auto_brands/97.jpg}"  alt="user" class="rounded-circle" width="45"height="45" />
+                                                             
+                                                              
+                                                         </div>
+                                                        <div class="">
+                                                            <h5 class="text-dark mb-0 font-16 font-weight-medium" th:text=${vehicle.brand}> </h5>
+                                                            <span class="text-muted font-14" th:text=${vehicle.model} ></span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="border-top-0 text-muted px-2 py-4 font-14" th:text=${vehicle.owner.ownerName}></td>
+                                                
+                                                <td class="border-top-0 text-center px-2 py-4">
+                                                 <div class="card" style= "width:198px; height:40px;">
+                                                       <div class="card-body" style= "background-image: url('../../assets/images/reg-tablice.jpg');  background-size: 200px 50px; background-repeat: no-repeat;">
+                                                       <!-- <input type="text" class="form-control text-uppercase" placeholder="ŠA-123-AA" style=" width:169px; height:40px; position:absolute; left: 25,5px; top:6px;">  -->
+                                                       <h2 class="card-title" style=" width:169px; height:40px;  position:absolute; left: 25,5px; top:11px;" th:text=${vehicle.licensePlate}> </h2>
+                                                       </div>
+                                                    </div>
+                                                
+                                                
+                                                  </td>
+                                                
+                                                
+                                                
+                                                
+                                                <td
+                                                    class="border-top-0 text-center font-weight-medium text-muted px-2 py-4" th:text=${vehicle.viewDate}>
+                                                    
+                                                </td>
+                                                
+                                                <!--  -->
+                                                <td class="font-weight-medium text-dark border-top-0 px-2 py-4" >
+                                                 <button th:if="${vehicle.dayToReg > 30}"  class="btn waves-effect waves-light btn-info" th:title="${'Registracija važi još ' + vehicle.dayToReg + ' dana.'}" th:text=${vehicle.dayToReg}></button>
+                                                 <button th:if="${vehicle.dayToReg <= 30 AND vehicle.dayToReg > 10 }"  class="btn waves-effect waves-light btn-warning"  th:title="${'Registracija važi još ' + vehicle.dayToReg + ' dana.'}" th:text=${vehicle.dayToReg}></button>
+                                                 <button th:if="${vehicle.dayToReg <= 10 AND vehicle.dayToReg > 0}"  class="btn waves-effect waves-light btn-danger" th:title="${'Registracija važi još ' + vehicle.dayToReg + ' dana.'}" th:text=${vehicle.dayToReg}></button>
+                                                 <button th:if="${vehicle.dayToReg < 0}"  class="btn waves-effect waves-light btn-light" th:title="${'Registracija istekla pre' + vehicle.dayToReg + ' dana.'}" th:text="ISTEKLA"></button>
+                                                   
+                                                </td>
+                                                <td class="font-weight-medium text-dark border-top-0 px-2 py-4">
+                                                   <a type="button" class="btn waves-effect waves-light btn-rounded btn-outline-danger delBtnVeh"  th:href="@{'/admin/deleteVehicle/' + ${vehicle.id}}" th:attr="data-vehicle=${vehicle.brand + ' reg. oznake: ' + vehicle.licensePlate} ">Izbriši</a>
+                                                   <a type="button" class="btn waves-effect waves-light btn-rounded btn-outline-success" th:href="@{'/admin/editVehicle/' + ${vehicle.id}}">Ispravi</a>
+                                                
+                                                </td>
+                                            </tr>
+                                              </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <!-- ******************************DELETE POPUP****************************** -->
+                  <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="myModal" role="dialog" tabindex="-1">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                             <h5 class="modal-title" id="myModalLabel">Brisanje vozila</h5>
+                                 <button aria-label="Close" class="close" data-dismiss="modal"type="button"><span aria-hidden="true">&times;</span></button>
+                          </div>
+               
+                      <div class="modal-body">
+                        <p class="alert alert-danger" id="deleteLearner"></p>
+                         <input type="hidden" class="form-control" th:id="removeLearner" th:name="removeLearner">
+                     </div>
+                     <div class="modal-footer">
+                         <button class="btn btn-secondary" data-dismiss="modal" type="button">Odustani</button>
+                       <a class="btn btn-danger" href="" id="delRef">Potvrdi</a>
+                     </div>
+                </div>
+           </div>
+         </div>
+                 </div>
+                </div>
+                 </div>
+            
+            <div th:replace="pages/partials/_footer"></div>
+        
+    <script type="text/javascript" th:src="@{../../assets/js/deleteVehicle.js}" src="../../static/assets/js/deleteVehicle.js"></script>
+    <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="../../assets/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="../../assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- apps -->
+    <!-- apps -->
+    <script src="../../dist/js/app-style-switcher.js"></script>
+    <script src="../../dist/js/feather.min.js"></script>
+    <script src="../../assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="../../dist/js/sidebarmenu.js"></script>
+    <!--Custom JavaScript -->
+    <script src="../../dist/js/custom.min.js"></script>
+    <!--This page JavaScript -->
+    <script src="../../assets/extra-libs/c3/d3.min.js"></script>
+    <script src="../../assets/extra-libs/c3/c3.min.js"></script>
+    <script src="../../assets/libs/chartist/dist/chartist.min.js"></script>
+    <script src="../../assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
+    <script src="../../assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js"></script>
+    <script src="../../assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="../../dist/js/pages/dashboards/dashboard1.min.js"></script>
+</body>
+</body>
+</html>

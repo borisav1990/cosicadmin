@@ -1,0 +1,29 @@
+body{
+    background-image: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url('../images/sv.marko.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center; 
+    height: 100vh;
+    font-family: sans-serif;
+}
+ h1{
+     text-align: center;
+     color:rgb(66, 54, 54);
+     margin: 30px 0 50px;
+ }
+ .gallery{
+     margin: 10px 50px;
+     
+ }
+
+ .gallery img{
+     width: 200px;
+     padding: 5px;
+     filter:grayscale(100%); /*sepija*/
+     transition: 1s;
+
+ }
+ .gallery img:hover{
+     filter:grayscale(0); /*vraca boju*/
+     transform: scale(1.1); /*puls slike na prevlačenje miša*/
+ }

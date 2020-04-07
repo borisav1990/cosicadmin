@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html
+      xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+ <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script type="text/javascript" src="../../webjars/jquery/2.2.3/jquery.min.js"></script> 
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/images/favicon.png">
+    <title>Ćosić podovi | Administrator </title>
+    <!-- Custom CSS -->
+           
+     <link rel="stylesheet" type="text/css" href="../../dist/css/styleGalery.css">
+     <link rel="stylesheet" type="text/css" href="../../dist/css/lightbox.min.css">
+    
+    <link href="../../assets/extra-libs/c3/c3.min.css" rel="stylesheet">
+    <link href="../../assets/libs/chartist/dist/chartist.min.css" rel="stylesheet">
+    <link href="../../assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link href="../../dist/css/style.min.css" rel="stylesheet">
+
+</head>
+<body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+  
+    <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+        <div th:replace="pages/partials/_header"></div>
+           <div th:replace="pages/partials/_sidebar"></div>
+               <div class="page-wrapper">
+                  <div class="container-fluid">
+                
+                  <div class="row" th:object="${vehicle}">
+                    <div class="col-xl-12">
+                        <div class="card">
+                            <div class="card-body">
+                            <div class="row">
+                              <div class="col-md-4">
+                               <div class="d-flex no-block align-items-center">
+                                   <div class="mr-3">
+                                             <img th:if="${vehicle.brand == 'Volkswagen'}"  th:src="@{../../assets/images/auto_brands/211.jpg}"  alt="user" class="rounded-circle" width="45" />
+                                             <img th:if="${vehicle.brand == 'Audi'}"        th:src="@{../../assets/images/auto_brands/38.jpg}"  alt="user" class="rounded-circle" width="45" />
+                                             <img th:if="${vehicle.brand == 'Fiat'}"        th:src="@{../assets/images/auto_brands/109.jpg}"  alt="user" class="rounded-circle" width="45" />
+                                             <img th:if="${vehicle.brand == 'Renault'}"  th:src="@{../../assets/images/auto_brands/192.jpg}"  alt="user" class="rounded-circle" width="45" />
+                                             <img th:if="${vehicle.brand == 'Peugeot'}"  th:src="@{../../assets/images/auto_brands/185.jpg}"  alt="user" class="rounded-circle" width="45"/>
+                                             <img th:if="${vehicle.brand == 'Citroen'}"  th:src="@{../../assets/images/auto_brands/97.jpg}"  alt="user" class="rounded-circle" width="45" />
+                                   </div>
+                                    <div class="">
+                                     <h5 class="text-dark mb-0 font-16 font-weight-medium">Volkswagen</h5>
+                                     <span class="text-muted font-14">Polo</span>
+                                    </div>
+                              </div>
+                           </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                 <div class="card" style= "width:198px; height:40px;">
+                                     <div class="card-body" style= "background-image: url('../../assets/images/reg-tablice.jpg');  background-size: 200px 50px; background-repeat: no-repeat;">
+                                         <h2 class="card-title" style=" width:170px; height:40px;  position:absolute; left: 26px; top:9px;" th:text=${vehicle.licensePlate}> </h2>
+                                         </div>
+                                     </div>
+                               </div>
+                           </div>
+                           <hr>
+                             <!-- ---------------------TABS----------------- -->
+                                <ul class="nav nav-tabs mb-3">
+                                    <li class="nav-item">
+                                        <a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link">
+                                            <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
+                                            <span class="d-none d-lg-block">Servisi</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#profile" data-toggle="tab" aria-expanded="true" class="nav-link active">
+                                            <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
+                                            <span class="d-none d-lg-block">Podaci</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#settings" data-toggle="tab" aria-expanded="false" class="nav-link">
+                                            <i class="mdi mdi-settings-outline d-lg-none d-block mr-1"></i>
+                                            <span class="d-none d-lg-block">Galerija</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                
+                                <!-- -------------------CONTENT TAB -->
+
+                     <div class="tab-content">
+                                    
+                                    <!-- -----------------SERVICE-------------- -->
+                                    <div class="tab-pane" id="home">
+                                    <div class="row">
+                                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Svi servisi navedenog vozila.</h4>
+                            </div>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"  style="color:black">Opis servisa:</th>
+                                        <th scope="col"  style="color:black">Datum:</th>
+                                        <th scope="col"  style="color:black">Auto servis:</th>
+                                        <th scope="col"  style="color:black">Kilometraža:</th>
+                                        <th scope="col"  style="color:black">Cena:</th>
+                                        
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="service: ${listOfSer}" >
+                                       
+                                        <th scope="row">
+                                           <div class="col-lg-4">
+                                                <div class="mb-4">
+                                                 <p>
+                                                 <a class="btn btn-info collapsed" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Opis</a>
+                                                 </p>
+                                          <div class="collapse" id="collapseExample" style="">
+                                            <div class="card card-body" th:text="${service.work}"></div>
+                                          </div>
+                                          </div> <!-- end .mb-4-->
+                                          </div>
+                                     </th>
+                                     <th th:text="${service.date}"></th>
+                                     <th th:text="${service.workshop}"></th>
+                                     <th th:text="${service.km}"></th>
+                                     <th th:text="${service.price}"></th>
+                                   </tr>
+                                   <tr>
+                                     <th  th:text="${'Ukupno uloženo u održavanje vozila : ' + summePrice + ' RSD'}"></th>
+                                   </tr>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    </div>
+                    </div>
+                             
+                              <!-- -----------------DATA ------------------------- -->
+                                    <div class="tab-pane show active" id="profile">
+                                    
+                                    <div class= "form-actions">
+                                     <div class="text-right">
+                                       <a th:href="@{'/admin/createdPdf/' + ${vehicle.id}}" ><img th:src="@{../../assets/images/pdf.png}" style="width:50px;" title="Skini podatke u PDF file" ></a>
+                                    </div>
+                                    </div>
+                                    
+                                   
+                                    <hr>
+                                    <div class="row">
+                                       <div class="col-md-4 col-sm-4 p-4">
+                                        <div class="card">
+                                          <div class="card-body">
+                                            <h4 class="card-title">Vlasnik:</h4>
+                                              <div class="table-responsive">
+                                                 <table class="table table-hover table-info">
+                                                   <thead class="bg-info text-white"></thead>
+                                                       <tbody>
+                                                         <tr><th scope="row" style="color:black" th:text="${'Vlasnik: ' + vehicle.owner.ownerName }" ></th></tr>
+                                                         <tr><th scope="row" style="color:black"th:text="${'Ime i prezime: ' + vehicle.owner.name}"></th></tr>
+                                                         <tr><th scope="row" style="color:black" th:text="${'Adresa: ' + vehicle.owner.address }" ></th></tr>
+                                                         <tr><th scope="row"style="color:black"th:text="${'JMBG: ' + vehicle.owner.jmbg}"></th></tr>
+                                                     </tbody>
+                                                 </table>
+                                             </div>
+                                          </div>
+                                       </div>
+                                     </div> 
+                                      <div class="col-md-4 col-sm-4 p-4">
+                                        <div class="card">
+                                          <div class="card-body">
+                                            <h4 class="card-title">Motor:</h4>
+                                              <div class="table-responsive">
+                                                 <table class="table table-hover table-success">
+                                                   <thead class="bg-success text-white"></thead>
+                                                       <tbody>
+                                                         <tr><th scope="row" style="color:black" th:text="${'Zapremina: ' + vehicle.volume + ' ccm' }" ></th></tr>
+                                                         <tr><th scope="row" style="color:black" th:text="${'Gorivo: ' + vehicle.fuelType}"></th></tr>
+                                                         <tr><th scope="row" style="color:black" th:text="${'Snaga: ' + vehicle.power + ' kW' }"></th></tr>
+                                                         <tr><th scope="row" style="color:black" th:text="${'Broj: ' + vehicle.motorNumber}"></th></tr>
+                                                     </tbody>
+                                                 </table>
+                                             </div>
+                                          </div>
+                                       </div>
+                                     </div>
+                                       <div class="col-md-4 col-sm-4 p-4">
+                                        <div class="card">
+                                          <div class="card-body">
+                                            <h4 class="card-title">Šasija:</h4>
+                                              <div class="table-responsive">
+                                                 <table class="table table-hover table-warning">
+                                                   <thead class="bg-warning text-white"></thead>
+                                                       <tbody>
+                                                         <tr><th scope="row" style="color:black" th:text="${'Godište: ' + vehicle.firstReg + ' god'}" ></th></tr>
+                                                         <tr><th scope="row" style="color:black" th:text="${'Mesta: ' + vehicle.place + ' osobe' }"></th></tr>
+                                                         <tr><th scope="row" style="color:black" th:text="${'Masa: ' + vehicle.mass + ' kg' }"></th></tr>
+                                                         <tr><th scope="row" style="color:black" th:text="${'Nosivost: ' + vehicle.payload + ' kg' }"></th></tr>
+                                                         <tr><th scope="row" style="color:black" th:text="${'Vrsta: ' + vehicle.category }"></th></tr>
+                                                         <tr><th scope="row" style="color:black" th:text="${'Broj: ' + vehicle.chassisNumber}"></th></tr>
+                                                     </tbody>
+                                                 </table>
+                                             </div>
+                                          </div>
+                                       </div>
+                                   </div>
+                                </div>
+                            </div>
+                            
+                            <!-------------------------- GALLERY  ------------------------------->
+                                    <div class="tab-pane" id="settings">
+                                    <div class="row">
+                                     <div class="col-6 col-md-6">
+                                       <br>
+                                     </div>
+                                    </div>
+                                    
+                                     <div class="row" >
+                                       
+                                       <div class="col-md-4 "  th:each = "file, itrStat : ${listOfImg}" >
+                                         
+                                      
+                                       
+                                         <a th:href="@{'/images/' + ${file.modifiedFileName}}" data-lightbox="mygallery" th:data-title="${'Foto: ' + file.modifiedFileName}">
+                                           <img th:src="@{'/images/' + ${file.modifiedFileName}}" alt="image" class="img-thumbnail" width="270" />
+                                         </a>  
+                                        
+                                        </div>
+                                     </div>
+                                       
+                                       
+                                    </div>
+                                </div>
+
+                            </div> <!-- end card-body-->
+                        </div> <!-- end card-->
+                    </div>
+                 </div>
+                 </div>
+                </div>
+            </div>
+            
+            <div th:replace="pages/partials/_footer"></div>
+  
+   <script type="text/javascript" src="../../dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="../../assets/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="../../assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../dist/js/app-style-switcher.js"></script>
+    <script src="../../dist/js/feather.min.js"></script>
+    <script src="../../assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="../../dist/js/sidebarmenu.js"></script>
+    <script src="../../dist/js/custom.min.js"></script>
+    <script src="../../assets/extra-libs/c3/d3.min.js"></script>
+    <script src="../../assets/extra-libs/c3/c3.min.js"></script>
+    <script src="../../assets/libs/chartist/dist/chartist.min.js"></script>
+    <script src="../../assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
+    <script src="../../assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js"></script>
+    <script src="../../assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="../../dist/js/pages/dashboards/dashboard1.min.js"></script>     
+</body>
+</body>
+</html>
